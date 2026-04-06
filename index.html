@@ -15,7 +15,6 @@
         .text-nude-sub { color: #a6968a; }
         .sortable-ghost { opacity: 0.3; background: #e8ddd3 !important; }
         .drag-handle { cursor: grab; color: #d1c7be; display: flex; align-items: center; padding-right: 10px; font-size: 20px; }
-        /* 飯店特大字體：司機專用 */
         .text-taxi-info { font-size: 22px !important; font-weight: 700; color: #1a1a1a; }
         input, textarea, select { font-size: 16px !important; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -27,9 +26,9 @@
         <header class="mb-6 flex justify-between items-center">
             <div>
                 <h1 class="text-2xl font-bold text-gray-800">曼谷行程助手</h1>
-                <p class="text-[10px] text-nude-sub tracking-widest uppercase">Bangkok 2026 Family Trip</p>
+                <p class="text-[10px] text-nude-sub tracking-widest uppercase">Bangkok 2026</p>
             </div>
-            <button @click="resetData" class="text-[11px] bg-nude-accent text-white px-3 py-1.5 rounded-full">重設行程</button>
+            <button @click="resetData" class="text-[11px] bg-nude-accent text-white px-3 py-1.5 rounded-full">重設</button>
         </header>
 
         <div v-show="currentTab === 'schedule'">
@@ -46,14 +45,24 @@
                 <div v-for="(item, iIndex) in itinerary[currentDayIndex].items" :key="item.id">
                     <div class="nude-card p-4 mb-2 flex">
                         <div class="drag-handle">⋮⋮</div>
-                        <div class="flex-1 flex gap-3">
-                            <input v-model="item.time" class="font-bold text-gray-800 w-14 outline-none bg-transparent">
-                            <div class="flex-1">
-                                <div class="flex items-center justify-between">
-                                    <input v-model="item.location" class="font-bold text-gray-900 block w-full outline-none bg-transparent">
-                                    <button @click="deleteItem(iIndex)" class="text-gray-300 text-xl px-2">×</button>
+                        <div class="flex-1">
+                            <div class="flex gap-3 mb-2">
+                                <input v-model="item.time" class="font-bold text-gray-800 w-14 outline-none bg-transparent">
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <input v-model="item.location" class="font-bold text-gray-900 block w-full outline-none bg-transparent text-lg">
+                                        <button @click="deleteItem(iIndex)" class="text-gray-300 text-xl px-2">×</button>
+                                    </div>
+                                    <input v-model="item.note" class="text-xs text-nude-sub block w-full outline-none bg-transparent" placeholder="點擊編輯備註...">
                                 </div>
-                                <input v-model="item.note" class="text-xs text-nude-sub block w-full outline-none bg-transparent" placeholder="點擊編輯備註...">
+                            </div>
+                            <div class="flex gap-2 ml-14">
+                                <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(item.location)" target="_blank" class="text-[10px] bg-blue-50 text-blue-500 px-3 py-1 rounded-lg font-bold flex items-center gap-1">
+                                    📍 地圖導航
+                                </a>
+                                <a :href="'https://www.google.com/maps/search/' + encodeURIComponent(item.location + '附近景點')" target="_blank" class="text-[10px] bg-orange-50 text-orange-500 px-3 py-1 rounded-lg font-bold flex items-center gap-1">
+                                    🔍 附近找點
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -62,38 +71,38 @@
                             <input v-model="item.transport.mode" class="text-[10px] bg-nude-accent text-white px-2 py-0.5 rounded-full w-20 text-center outline-none font-bold">
                             <input v-model="item.transport.duration" class="text-[10px] text-nude-sub w-14 outline-none">
                         </div>
-                        <input v-model="item.transport.transNote" class="text-xs text-stone-400 bg-transparent outline-none italic w-full" placeholder="交通指引...">
+                        <input v-model="item.transport.transNote" class="text-xs text-stone-400 bg-transparent outline-none italic w-full" placeholder="交通說明...">
                     </div>
                 </div>
             </div>
 
             <button @click="addItem" class="w-full mt-4 py-4 border-2 border-dashed border-nude-accent rounded-2xl text-nude-sub font-bold text-sm bg-white/50">
-                + 插入新行程 (長按拖移排序)
+                + 插入新行程 (拖移排序)
             </button>
         </div>
 
         <div v-show="currentTab === 'info'" class="space-y-5">
              <div class="nude-card p-6">
                 <h3 class="font-bold mb-4 text-gray-800 flex items-center gap-2">🏨 飯店資訊 (司機專用)</h3>
-                <div class="space-y-4">
-                    <div><p class="text-[11px] text-nude-sub font-bold uppercase">Hotel Name</p><input v-model="travelData.hotel.name" class="text-taxi-info w-full bg-transparent border-b border-nude-accent py-1 outline-none"></div>
-                    <div><p class="text-[11px] text-nude-sub font-bold uppercase">Address</p><textarea v-model="travelData.hotel.address" class="text-taxi-info w-full bg-transparent border-b border-nude-accent py-1 outline-none min-h-[110px] resize-none leading-relaxed"></textarea></div>
-                    <div><p class="text-[11px] text-nude-sub font-bold uppercase">Tel</p><input v-model="travelData.hotel.phone" class="text-taxi-info w-full bg-transparent border-b border-nude-accent py-1 outline-none"></div>
+                <div class="space-y-4 text-left">
+                    <div><p class="text-[10px] text-nude-sub font-bold uppercase">Hotel Name</p><input v-model="travelData.hotel.name" class="text-taxi-info w-full bg-transparent border-b border-nude-accent py-1 outline-none"></div>
+                    <div><p class="text-[10px] text-nude-sub font-bold uppercase">Address</p><textarea v-model="travelData.hotel.address" class="text-taxi-info w-full bg-transparent border-b border-nude-accent py-1 outline-none min-h-[110px] resize-none leading-relaxed"></textarea></div>
+                    <div><p class="text-[10px] text-nude-sub font-bold uppercase">Tel</p><input v-model="travelData.hotel.phone" class="text-taxi-info w-full bg-transparent border-b border-nude-accent py-1 outline-none"></div>
                 </div>
+                <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(travelData.hotel.address)" target="_blank" class="mt-4 block text-center bg-gray-800 text-white py-3 rounded-xl font-bold text-sm">在地圖開啟飯店方位</a>
              </div>
 
              <div class="nude-card p-5">
-                <h3 class="font-bold mb-3 text-gray-800 flex items-center gap-2">✈️ 航班預約</h3>
+                <h3 class="font-bold mb-3 text-gray-800">✈️ 航班與 🍴 餐廳</h3>
                 <div class="grid grid-cols-2 gap-2 text-sm font-bold mb-4 text-center">
-                    <div class="p-3 bg-gray-50 rounded-xl border border-f2e9e1">去程 BR067<br><span class="text-xs text-nude-sub">08:15 - 11:20</span></div>
-                    <div class="p-3 bg-gray-50 rounded-xl border border-f2e9e1">回程 BR202<br><span class="text-xs text-nude-sub">15:10 - 20:00</span></div>
+                    <div class="p-3 bg-gray-50 rounded-xl border border-f2e9e1">去程 BR067<br><span class="text-[10px] text-nude-sub">08:15 - 11:20</span></div>
+                    <div class="p-3 bg-gray-50 rounded-xl border border-f2e9e1">回程 BR202<br><span class="text-[10px] text-nude-sub">15:10 - 20:00</span></div>
                 </div>
-                <h3 class="font-bold mb-2 text-gray-800 flex items-center gap-2">🍴 餐廳預約備忘</h3>
-                <textarea v-model="travelData.reservationNote" class="w-full bg-gray-50 rounded-xl p-4 text-sm min-h-[100px] outline-none border-none leading-relaxed font-medium"></textarea>
+                <textarea v-model="travelData.reservationNote" class="w-full bg-gray-50 rounded-xl p-4 text-sm min-h-[100px] outline-none border-none leading-relaxed font-medium" placeholder="餐廳預約資訊..."></textarea>
              </div>
 
              <div class="nude-card p-5">
-                <h3 class="font-bold mb-3 text-gray-800 flex items-center gap-2">🛡️ 保險與緊急聯絡</h3>
+                <h3 class="font-bold mb-3 text-gray-800">🛡️ 保險與緊急聯絡</h3>
                 <div class="space-y-3">
                     <div class="flex flex-col border-b border-f2e9e1 pb-2">
                         <span class="text-[10px] text-nude-sub font-bold">保險公司</span>
@@ -110,9 +119,9 @@
         <div v-show="currentTab === 'billing'">
             <div class="space-y-5">
                 <div class="nude-card p-5">
-                    <h3 class="font-bold mb-3 text-gray-800">1. 設定成員</h3>
+                    <h3 class="font-bold mb-3 text-gray-800">分帳成員</h3>
                     <div class="flex flex-wrap gap-2 mb-3">
-                        <span v-for="(name, i) in billingData.members" :key="i" class="bg-nude-accent text-white text-[11px] px-3 py-1 rounded-full flex items-center gap-1 font-bold">
+                        <span v-for="(name, i) in billingData.members" :key="i" class="bg-nude-accent text-white text-[11px] px-3 py-1 rounded-full flex items-center font-bold">
                             {{ name }} <button @click="billingData.members.splice(i, 1)" class="ml-1">×</button>
                         </span>
                     </div>
@@ -123,26 +132,26 @@
                 </div>
 
                 <div class="nude-card p-5">
-                    <h3 class="font-bold mb-3 text-gray-800">2. 記一筆支出</h3>
+                    <h3 class="font-bold mb-3 text-gray-800">新增支出</h3>
                     <div class="grid grid-cols-2 gap-2 mb-3">
                         <input v-model="newBill.item" placeholder="項目" class="bg-gray-50 border border-nude-accent rounded-xl px-4 py-2 text-sm outline-none">
                         <input v-model.number="newBill.amount" type="number" placeholder="金額" class="bg-gray-50 border border-nude-accent rounded-xl px-4 py-2 text-sm outline-none">
                     </div>
                     <div class="flex items-center justify-between mb-4">
-                        <span class="text-xs font-bold text-nude-sub">誰付的錢？</span>
+                        <span class="text-xs font-bold text-nude-sub">支付者</span>
                         <select v-model="newBill.paidBy" class="bg-gray-50 border border-nude-accent rounded-xl px-3 py-1.5 text-xs font-bold outline-none">
                             <option v-for="m in billingData.members" :value="m">{{ m }}</option>
                         </select>
                     </div>
-                    <button @click="addBill" class="w-full bg-gray-800 text-white py-3.5 rounded-2xl text-sm font-bold shadow-md active:scale-95 transition">新增支出清單</button>
+                    <button @click="addBill" class="w-full bg-gray-800 text-white py-3.5 rounded-2xl text-sm font-bold shadow-md">加入帳單</button>
                 </div>
 
-                <div v-if="billingData.history.length > 0" class="nude-card p-5">
+                <div v-if="billingData.history.length > 0" class="nude-card p-5 overflow-hidden">
                     <h3 class="font-bold mb-3 text-gray-800">支出明細</h3>
                     <div class="space-y-2 max-h-[250px] overflow-y-auto no-scrollbar">
                         <div v-for="(b, i) in billingData.history" :key="i" class="flex justify-between items-center text-sm border-b border-gray-50 pb-2">
-                            <span>{{ b.item }} <span class="text-[10px] text-nude-sub">({{ b.paidBy }}付)</span></span>
-                            <span class="font-bold text-gray-800">฿{{ b.amount }}</span>
+                            <span>{{ b.item }} <span class="text-[10px] text-nude-sub">({{ b.paidBy }})</span></span>
+                            <span class="font-bold">฿{{ b.amount }}</span>
                         </div>
                     </div>
                 </div>
@@ -150,21 +159,14 @@
         </div>
 
         <footer class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-md bg-gray-900 rounded-[30px] p-2 shadow-2xl flex justify-around border border-gray-700">
-            <button @click="currentTab = 'schedule'" :class="['flex flex-col items-center p-2 transition', currentTab === 'schedule' ? 'text-white' : 'text-gray-500']">
-                <span class="text-lg">🗓️</span><span class="text-[10px] font-bold">行程</span>
-            </button>
-            <button @click="currentTab = 'info'" :class="['flex flex-col items-center p-2 transition', currentTab === 'info' ? 'text-white' : 'text-gray-500']">
-                <span class="text-lg">📑</span><span class="text-[10px] font-bold">資訊</span>
-            </button>
-            <button @click="currentTab = 'billing'" :class="['flex flex-col items-center p-2 transition', currentTab === 'billing' ? 'text-white' : 'text-gray-500']">
-                <span class="text-lg">💰</span><span class="text-[10px] font-bold">分帳</span>
-            </button>
+            <button @click="currentTab = 'schedule'" :class="['flex flex-col items-center p-2', currentTab === 'schedule' ? 'text-white' : 'text-gray-500']">🗓️<span class="text-[10px] font-bold">行程</span></button>
+            <button @click="currentTab = 'info'" :class="['flex flex-col items-center p-2', currentTab === 'info' ? 'text-white' : 'text-gray-500']">📑<span class="text-[10px] font-bold">資訊</span></button>
+            <button @click="currentTab = 'billing'" :class="['flex flex-col items-center p-2', currentTab === 'billing' ? 'text-white' : 'text-gray-500']">💰<span class="text-[10px] font-bold">分帳</span></button>
         </footer>
     </div>
 
     <script>
         const { createApp, ref, reactive, watch, onMounted, nextTick } = Vue;
-        
         createApp({
             setup() {
                 const currentTab = ref('schedule');
@@ -174,33 +176,32 @@
 
                 const initialItinerary = [
                     { day: 1, items: [
-                        { id: 101, time: '05:00', location: '苗栗出發', note: '桃園機場', transport: { mode: 'Car 🚗', duration: '1h', transNote: '自行開車或接送' } },
-                        { id: 102, time: '11:20', location: '抵達曼谷 BKK', note: '入境辦理', transport: { mode: 'Taxi 🚗', duration: '45m', transNote: '機場 1 樓排班車' } },
-                        { id: 104, time: '18:30', location: 'Aunglo by Yangrak', note: '炭火料理', transport: { mode: 'Taxi 🚗', duration: '20m', transNote: '晚餐後回飯店' } }
+                        { id: 101, time: '05:00', location: '苗栗出發', note: '桃園機場', transport: { mode: 'Car 🚗', duration: '1h', transNote: '' } },
+                        { id: 102, time: '11:20', location: '抵達曼谷 BKK', note: '入境辦理', transport: { mode: 'Taxi 🚗', duration: '45m', transNote: '' } },
+                        { id: 103, time: '18:30', location: 'Aunglo by Yangrak', note: '炭火料理', transport: { mode: 'Taxi 🚗', duration: '20m', transNote: '' } }
                     ]},
                     { day: 2, items: [
-                        { id: 201, time: '08:30', location: '從 TRIBE 飯店出發', note: '前往碼頭', transport: { mode: 'BTS 🚇', duration: '35m', transNote: '至 BTS Phrom Phong' } },
-                        { id: 202, time: '09:30', location: '鄭王廟泰服體驗', note: '拍照', transport: { mode: 'Boat ⛴️', duration: '10m', transNote: '接駁船至 N5' } },
-                        { id: 203, time: '18:00', location: 'Lon Lon Canteen', note: '晚餐', transport: { mode: 'Walk 🚶', duration: '10m', transNote: '散步回飯店' } }
+                        { id: 201, time: '08:30', location: '從 TRIBE 飯店出發', note: 'Day 2 行程開始', transport: { mode: 'BTS 🚇', duration: '35m', transNote: '' } },
+                        { id: 202, time: '09:30', location: '鄭王廟泰服體驗', note: '拍照', transport: { mode: 'Boat ⛴️', duration: '10m', transNote: '' } },
+                        { id: 203, time: '18:00', location: 'Lon Lon Canteen', note: '晚餐', transport: { mode: 'Walk 🚶', duration: '10m', transNote: '' } }
                     ]},
-                    { day: 3, items: [{ id: 301, time: '10:30', location: '從 TRIBE 飯店出發', note: '文創選物', transport: { mode: 'Taxi 🚗', duration: '20m', transNote: '叫 Grab' } }, { id: 302, time: '19:00', location: 'Peppina', note: '披薩晚餐', transport: { mode: 'Walk 🚶', duration: '10m', transNote: '' } }]},
-                    { day: 4, items: [{ id: 401, time: '08:30', location: '從 TRIBE 飯店出發', note: '包車大城', transport: { mode: 'Charter 🚗', duration: '1.5h', transNote: '' } }, { id: 402, time: '10:30', location: '大城動物園', note: '長頸鹿', transport: { mode: 'Car 🚗', duration: '30m', transNote: '' } }]},
-                    { day: 5, items: [{ id: 501, time: '08:15', location: '從 TRIBE 飯店出發', note: '廚藝學校', transport: { mode: 'BTS 🚇', duration: '25m', transNote: '' } }, { id: 502, time: '09:00', location: 'Silom Cooking School', note: '下廚', transport: { mode: 'Walk 🚶', duration: '5m', transNote: '' } }]},
-                    { day: 6, items: [{ id: 601, time: '09:15', location: '從 TRIBE 飯店出發', note: '安多哥市場', transport: { mode: 'MRT 🚇', duration: '35m', transNote: '' } }, { id: 602, time: '19:00', location: 'The Local', note: '泰菜晚餐', transport: { mode: 'Walk 🚶', duration: '15m', transNote: '' } }]},
-                    { day: 7, items: [{ id: 701, time: '09:00', location: 'TRIBE 飯店早餐', note: '最後悠閒', transport: { mode: 'Walk 🚶', duration: '10m', transNote: '' } }, { id: 702, time: '12:00', location: 'Check-out 機場', note: '前往 BKK', transport: { mode: 'Taxi 🚗', duration: '45m', transNote: '起飛前 2h 到' } }]}
+                    { day: 3, items: [{ id: 301, time: '10:30', location: '從 TRIBE 飯店出發', note: 'Day 3', transport: { mode: 'Taxi 🚗', duration: '20m', transNote: '' } }, { id: 302, time: '19:00', location: 'Peppina', note: '披薩', transport: { mode: 'Walk 🚶', duration: '10m', transNote: '' } }]},
+                    { day: 4, items: [{ id: 401, time: '08:30', location: '從 TRIBE 飯店出發', note: 'Day 4 包車', transport: { mode: 'Charter 🚗', duration: '1.5h', transNote: '' } }, { id: 402, time: '10:30', location: '大城動物園', note: '互動', transport: { mode: 'Car 🚗', duration: '30m', transNote: '' } }]},
+                    { day: 5, items: [{ id: 501, time: '08:15', location: '從 TRIBE 飯店出發', note: 'Day 5', transport: { mode: 'BTS 🚇', duration: '25m', transNote: '' } }, { id: 502, time: '09:00', location: 'Silom Cooking School', note: '下廚', transport: { mode: 'Walk 🚶', duration: '5m', transNote: '' } }]},
+                    { day: 6, items: [{ id: 601, time: '09:15', location: '從 TRIBE 飯店出發', note: 'Day 6', transport: { mode: 'MRT 🚇', duration: '35m', transNote: '' } }, { id: 602, time: '19:00', location: 'The Local', note: '晚餐', transport: { mode: 'Walk 🚶', duration: '15m', transNote: '' } }]},
+                    { day: 7, items: [{ id: 701, time: '09:00', location: 'TRIBE 飯店早餐', note: 'Day 7', transport: { mode: 'Walk 🚶', duration: '10m', transNote: '' } }, { id: 702, time: '12:00', location: 'Check-out 機場', note: '返台', transport: { mode: 'Taxi 🚗', duration: '45m', transNote: '' } }]}
                 ];
 
                 const travelData = reactive({
                     hotel: { name: 'TRIBE Living Bangkok Sukhumvit 39', address: '39 Soi Phrom Chit, Watthana, Bangkok 10110', phone: '+66 2 662 4333' },
-                    reservationNote: '1. Aunglo (Day 1 18:30)\n2. Peppina (Day 3 19:00)\n3. The Local (Day 6 19:00)',
+                    reservationNote: '1. Aunglo (D1 18:30)\n2. Peppina (D3 19:00)\n3. The Local (D6 19:00)',
                     insurance: { company: '富邦產險', phone: '+886-2-2191-0033' }
                 });
 
                 const itinerary = reactive(initialItinerary);
                 const billingData = reactive({ members: ['我', '夥伴'], history: [] });
 
-                // 存檔機制
-                const saved = localStorage.getItem('bkk_pro_v10');
+                const saved = localStorage.getItem('bkk_pro_v11');
                 if (saved) {
                     const parsed = JSON.parse(saved);
                     Object.assign(itinerary, parsed.itinerary);
@@ -209,33 +210,28 @@
                 }
 
                 watch([itinerary, travelData, billingData], () => {
-                    localStorage.setItem('bkk_pro_v10', JSON.stringify({ itinerary, travelData, billingData }));
+                    localStorage.setItem('bkk_pro_v11', JSON.stringify({ itinerary, travelData, billingData }));
                 }, { deep: true });
 
                 const initSortable = () => {
                     const el = document.getElementById('itinerary-list');
                     if (el) {
-                        Sortable.create(el, {
-                            handle: '.drag-handle',
-                            animation: 150,
-                            ghostClass: 'sortable-ghost',
-                            onEnd: (evt) => {
-                                const currItems = itinerary[currentDayIndex.value].items;
-                                const item = currItems.splice(evt.oldIndex, 1)[0];
-                                currItems.splice(evt.newIndex, 0, item);
-                            }
-                        });
+                        Sortable.create(el, { handle: '.drag-handle', animation: 150, onEnd: (evt) => {
+                            const currItems = itinerary[currentDayIndex.value].items;
+                            const item = currItems.splice(evt.oldIndex, 1)[0];
+                            currItems.splice(evt.newIndex, 0, item);
+                        }});
                     }
                 };
 
                 onMounted(initSortable);
                 watch([currentDayIndex, currentTab], () => { if(currentTab.value === 'schedule') nextTick(initSortable); });
 
-                const addItem = () => { itinerary[currentDayIndex.value].items.push({ id: Date.now(), time: '12:00', location: '新景點', note: '', transport: { mode: 'Taxi 🚗', duration: '20m', transNote: '' } }); };
+                const addItem = () => { itinerary[currentDayIndex.value].items.push({ id: Date.now(), time: '12:00', location: '新地點', note: '', transport: { mode: 'Taxi 🚗', duration: '20m', transNote: '' } }); };
                 const deleteItem = (idx) => { if(confirm('刪除？')) itinerary[currentDayIndex.value].items.splice(idx, 1); };
                 const addMember = () => { if(newMember.value) { billingData.members.push(newMember.value); newMember.value = ''; } };
                 const addBill = () => { if(newBill.item && newBill.amount) { billingData.history.push({ ...newBill }); newBill.item = ''; newBill.amount = null; } };
-                const resetData = () => { if(confirm('確定重設？資料會恢復到初始行程！')) { localStorage.removeItem('bkk_pro_v10'); location.reload(); }};
+                const resetData = () => { if(confirm('確定重設？資料會清空！')) { localStorage.removeItem('bkk_pro_v11'); location.reload(); }};
 
                 return { currentTab, currentDayIndex, itinerary, travelData, billingData, newMember, newBill, addItem, deleteItem, addMember, addBill, resetData };
             }
